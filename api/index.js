@@ -1,7 +1,8 @@
-module.exports = async (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
+import crypto from 'crypto';
+import fetch from 'node-fetch';
 
-  const crypto = require('crypto');
+export default async function handler(req, res) {
+  res.setHeader('Content-Type', 'application/json');
 
   const apiKey = '9720547f8c2f4629a04e7522c2d49f03';
   const secret = '85ef05d6669c460fa73154a479de4a39';
@@ -23,7 +24,6 @@ module.exports = async (req, res) => {
   };
 
   try {
-    const fetch = require('node-fetch');
     const response = await fetch('https://www.blofin.com' + requestPath, {
       method,
       headers
@@ -35,4 +35,4 @@ module.exports = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Server failed', details: error.message });
   }
-};
+}
