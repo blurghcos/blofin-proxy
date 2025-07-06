@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   const method = 'GET';
   const requestPath = '/api/futures/v3/orders?status=1&limit=10';
-  const timestamp = Date.now() / 1000;
+  const timestamp = (Date.now() / 1000).toFixed(0); // format detik string integer
 
   const prehash = timestamp + method.toUpperCase() + requestPath;
   const hmac = crypto.createHmac('sha256', secret);
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   const headers = {
     'ACCESS-KEY': apiKey,
     'ACCESS-SIGN': signature,
-    'ACCESS-TIMESTAMP': timestamp.toString(),
+    'ACCESS-TIMESTAMP': timestamp,
     'ACCESS-PASSPHRASE': passphrase
   };
 
@@ -29,9 +29,9 @@ export default async function handler(req, res) {
       headers
     });
 
-    const text = await response.text(); // baca mentah dulu
+    const text = await response.text();
     try {
-      const data = JSON.parse(text); // coba parse json
+      const data = JSON.parse(text);
       res.status(200).json(data);
     } catch (e) {
       res.status(500).json({ error: 'Invalid JSON response', raw: text });
