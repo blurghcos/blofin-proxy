@@ -24,13 +24,18 @@ export default async function handler(req, res) {
   };
 
   try {
-    const response = await fetch('https://www.blofin.com' + requestPath, {
+    const response = await fetch('https://api.blofin.com' + requestPath, {
       method,
       headers
     });
 
-    const data = await response.json();
-    res.status(200).json(data);
+    const text = await response.text(); // baca mentah dulu
+    try {
+      const data = JSON.parse(text); // coba parse json
+      res.status(200).json(data);
+    } catch (e) {
+      res.status(500).json({ error: 'Invalid JSON response', raw: text });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server failed', details: error.message });
